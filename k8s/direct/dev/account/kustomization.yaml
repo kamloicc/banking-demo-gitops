@@ -13,4 +13,4 @@ labels:
 
 images:
   - name: kamloicc.jfrog.io/banking-docker-local/banking-demo/account-service
-    newTag: f989916efc9e
+    newTag: '#{Octopus.Action.Package[account-service].PackageVersion}'
