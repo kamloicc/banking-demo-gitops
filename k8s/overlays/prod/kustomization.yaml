@@ -6,8 +6,10 @@ namespace: banking-prod
 resources:
   - ../../base
 
-commonLabels:
-  app.kubernetes.io/environment: prod
+labels:
+  - pairs:
+      app.kubernetes.io/environment: prod
+    includeSelectors: true
 
 images:
   - name: kamloicc.jfrog.io/banking-docker-local/banking-demo/auth-service

@@ -12,5 +12,7 @@ resources:
   - kong.yaml
   - frontend.yaml
 
-commonLabels:
-  app.kubernetes.io/part-of: banking-demo
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: banking-demo
+    includeSelectors: true

@@ -6,8 +6,10 @@ namespace: banking-uat
 resources:
   - ../../base
 
-commonLabels:
-  app.kubernetes.io/environment: uat
+labels:
+  - pairs:
+      app.kubernetes.io/environment: uat
+    includeSelectors: true
 
 images:
   - name: kamloicc.jfrog.io/banking-docker-local/banking-demo/auth-service
