@@ -19,63 +19,102 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
+
       containers:
         - name: kong
           image: kong:3.4
           imagePullPolicy: IfNotPresent
+
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
-              drop: ["ALL"]
+              drop:
+                - ALL
+
           env:
             - name: KONG_DATABASE
               value: "off"
+
             - name: KONG_DECLARATIVE_CONFIG
               value: /kong/kong.yml
+
+            # Avoid creating one NGINX worker for every CPU on the node.
+            # One worker is sufficient for this local GitOps environment.
+            - name: KONG_NGINX_WORKER_PROCESSES
+              value: "1"
+
             - name: KONG_PROXY_ACCESS_LOG
               value: /dev/stdout
+
             - name: KONG_ADMIN_ACCESS_LOG
               value: /dev/stdout
+
             - name: KONG_PROXY_ERROR_LOG
               value: /dev/stderr
+
             - name: KONG_ADMIN_ERROR_LOG
               value: /dev/stderr
+
             - name: KONG_ADMIN_LISTEN
               value: 0.0.0.0:8001
+
             - name: KONG_PROXY_LISTEN
               value: 0.0.0.0:8000
+
           ports:
             - name: proxy
               containerPort: 8000
+              protocol: TCP
+
             - name: admin
               containerPort: 8001
+              protocol: TCP
+
           volumeMounts:
             - name: kong-config
               mountPath: /kong
               readOnly: true
+
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 300m
+              cpu: 200m
               memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+
+          startupProbe:
+            exec:
+              command:
+                - kong
+                - health
+            periodSeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 30
+
           readinessProbe:
             exec:
-              command: ["kong", "health"]
-            initialDelaySeconds: 15
+              command:
+                - kong
+                - health
             periodSeconds: 10
             timeoutSeconds: 10
+            failureThreshold: 3
+
           livenessProbe:
             exec:
-              command: ["kong", "health"]
-            initialDelaySeconds: 30
+              command:
+                - kong
+                - health
             periodSeconds: 20
             timeoutSeconds: 10
+            failureThreshold: 3
+
       volumes:
         - name: kong-config
           configMap:
             name: kong-config
+
 ---
 apiVersion: v1
 kind: Service
@@ -90,6 +129,9 @@ spec:
     - name: proxy
       port: 8000
       targetPort: proxy
+      protocol: TCP
+
     - name: admin
       port: 8001
       targetPort: admin
+      protocol: TCP
