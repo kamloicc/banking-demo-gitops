@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: banking-dev
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: banking-demo
+  source:
+    repoURL: https://github.com/kamloicc/banking-demo-gitops.git
+    targetRevision: main
+    path: k8s/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: banking-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

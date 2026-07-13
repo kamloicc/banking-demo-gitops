@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: banking-uat
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: banking-demo
+  source:
+    repoURL: https://github.com/kamloicc/banking-demo-gitops.git
+    targetRevision: main
+    path: k8s/overlays/uat
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: banking-uat
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true

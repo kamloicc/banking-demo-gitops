@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: banking-demo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Banking demo environments
+  sourceRepos:
+    - https://github.com/kamloicc/banking-demo-gitops.git
+  destinations:
+    - namespace: banking-dev
+      server: https://kubernetes.default.svc
+    - namespace: banking-uat
+      server: https://kubernetes.default.svc
+    - namespace: banking-prod
+      server: https://kubernetes.default.svc
