@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: banking-prod
   namespace: argocd
+  annotations:
+    argo.octopus.com/project: banking-demo-argo-cd
+    argo.octopus.com/environment: production
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
