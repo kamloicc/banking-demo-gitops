@@ -2,15 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - postgres.yaml
-  - redis.yaml
-  - auth-service.yaml
-  - account-service.yaml
-  - transfer-service.yaml
-  - notification-service.yaml
-  - kong-configmap.yaml
-  - kong.yaml
-  - frontend.yaml
+  - data
+  - auth
+  - account
+  - transfer
+  - notification
+  - gateway
+  - frontend
 
 labels:
   - pairs:
