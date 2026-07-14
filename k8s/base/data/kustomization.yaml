@@ -4,3 +4,8 @@ kind: Kustomization
 resources:
   - postgres.yaml
   - redis.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: banking-demo
+    includeSelectors: true

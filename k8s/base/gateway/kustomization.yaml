@@ -4,3 +4,8 @@ kind: Kustomization
 resources:
   - kong-configmap.yaml
   - kong.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: banking-demo
+    includeSelectors: true

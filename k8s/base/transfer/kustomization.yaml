@@ -3,3 +3,8 @@ kind: Kustomization
 
 resources:
   - transfer-service.yaml
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: banking-demo
+    includeSelectors: true

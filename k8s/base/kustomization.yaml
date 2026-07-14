@@ -9,8 +9,3 @@ resources:
   - notification
   - gateway
   - frontend
-
-labels:
-  - pairs:
-      app.kubernetes.io/part-of: banking-demo
-    includeSelectors: true
